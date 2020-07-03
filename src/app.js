@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerId
 
     //*--------------------------------------------------------------------
-    //* Tetrominoes
     const lTet = [
         [1, WIDTH+1, WIDTH*2+1, 2],
         [WIDTH, WIDTH+1, WIDTH+2, WIDTH*2+2],
@@ -48,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPosition = 4;
     let currentRotation = 0;
     //* select random piece
-    let randomPiece = Math.floor(Math.random()*pieces.length);
-    let current = pieces[randomPiece][currentRotation];
+    let random = Math.floor(Math.random()*pieces.length);
+    let current = pieces[random][currentRotation];
     let nextRandom = 0;
 
 
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         freeze();
     }
 
-    let random = nextRandom;
+    // let random = nextRandom;s
 
     function freeze() {
         if(current.some(index => squares[currentPosition + index + WIDTH].classList.contains('taken'))) {
@@ -146,12 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function rotate() {
+        // console.log(random);
         undraw();
         currentRotation++;
         if(currentRotation === current.length) {
             currentRotation = 0;
         }
-        console.log(random);
         current = pieces[random][currentRotation];
         draw();
     }
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
         else {
             draw();
-            timerId = setInterval(gravity, 1000);
+            timerId = setInterval(gravity, 400);
             nextRandom = Math.floor(Math.random()*pieces.length);
             displayShape();
         }
