@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SCORE_DISPLAY = document.querySelector('#score');
     const START_BUTTON = document.getElementById('start-button');
     let timerId
+    let score = 0;
 
     //*--------------------------------------------------------------------
     const lTet = [
@@ -87,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
         }
         case 40: {
-            //TODO moveDown
+            clearInterval(timerId);
+            timerId = setInterval(gravity, 0);
             break;
         }
         }
@@ -115,8 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
             nextRandom = Math.floor(Math.random() * pieces.length);
             current = pieces[random][currentRotation];
             currentPosition = 4;
+            clearInterval(timerId);
+            timerId = setInterval(gravity, 500);
             draw();
             displayShape();
+            addScore();
+            gameOver();
         }
     }
 
@@ -185,10 +191,35 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
         else {
             draw();
-            timerId = setInterval(gravity, 400);
+            timerId = setInterval(gravity, 500);
             nextRandom = Math.floor(Math.random()*pieces.length);
             displayShape();
         }
     })
+
+    function addScore() {
+        for(let i = 0; i < 199; i += WIDTH) {
+            const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9];
+
+            if(row.every(index => squares[index].classList.contains('taken'))) {
+                score += 10;
+                SCORE_DISPLAY.innerHTML = score;
+                row.forEach(index => {
+                    squares[index].classList.remove('taken');
+                    squares[index].classList.remove('tetromino');
+                })
+                const squaresRemoved = squares.splice(i, WIDTH);
+                squares = squaresRemoved.concat(squares);
+                squares.forEach(cell => GRID.appendChild(cell));
+            }
+        }
+    }
+
+    function gameOver() {
+        if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            SCORE_DISPLAY.innerHTML = 'end';
+            clearInterval(timerId);
+        }
+    }
 
 })
